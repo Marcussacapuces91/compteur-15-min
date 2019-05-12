@@ -1,3 +1,0 @@
-[submodule "lib-ws1812b"]
-	path = ws2812b
-	url = https://github.com/Marcussacapuces91/lib-ws2812b
