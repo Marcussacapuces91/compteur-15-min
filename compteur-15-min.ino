@@ -18,14 +18,14 @@ void setup() {
   
   line.setup();
 
-  Serial.begin(115200);
+//   Serial.begin(115200);
 }
 
 void loop() {
   const unsigned long st = millis();
   while ((millis() - st) < (DUREE * 60000UL)) {
     const unsigned long t = (millis() - st) / 10;
-    Serial.println(t);
+//    Serial.println(t);
 
     switch (DUREE * 6000UL - t) {
       case 5 * 6000 : // 5 min de la fin
