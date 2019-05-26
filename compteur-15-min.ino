@@ -4,7 +4,8 @@ enum {
   LED = LED_BUILTIN,
   RELAIS = 8,   // Position du relais : D8
   PUSH = 3,     // Position du bouton poussoir : D3
-  DUREE = 15,   // Temps de décompte
+  DUREE = 10,   // Temps de décompte
+  PRE = 1,
   PB_LED = 4,   // Port B : PB4 = D12
   MAX_LED = 12, // 12 leds sur une ligne
 };
@@ -12,13 +13,31 @@ enum {
 
 WS2812b<PB_LED, MAX_LED, 1> line;
 
+void sonner(const unsigned aDuree) {
+// Flash rouge
+  //for (byte i = 0; i < MAX_LED ; ++i) line.setRGB(i, { 255,64,64 });
+//  line.flush();
+
+// Sonnerie
+  digitalWrite(RELAIS, HIGH);
+  const unsigned long st = millis();
+  while (millis() - st < aDuree) {
+    for (byte i = 0; i < MAX_LED ; ++i) line.setRGB(i, { 255,32,32 });
+    line.flush();
+    delay(50);
+    for (byte i = 0; i < MAX_LED ; ++i) line.setRGB(i, { 0,0,0 });
+    line.flush();
+    delay(50);
+  }
+  digitalWrite(RELAIS, LOW);
+
+}
+
 void setup() {
   pinMode(RELAIS, OUTPUT);
   pinMode(PUSH, INPUT_PULLUP);
   
   line.setup();
-
-//   Serial.begin(115200);
 }
 
 void loop() {
@@ -28,19 +47,15 @@ void loop() {
 //    Serial.println(t);
 
     switch (DUREE * 6000UL - t) {
-      case 5 * 6000 : // 5 min de la fin
-        digitalWrite(RELAIS, HIGH);
-        delay(200);
-        digitalWrite(RELAIS, LOW);
+      case PRE * 6000 : // PRE min de la fin
+        sonner(200);
         break;
       case 5 * 100 :  // les 5 dernière secondes
       case 4 * 100 :
       case 3 * 100 :
       case 2 * 100 :
       case 1 * 100 :
-        digitalWrite(RELAIS, HIGH);
-        delay(50);
-        digitalWrite(RELAIS, LOW);
+        sonner(50);
         break;
     }
 
@@ -54,9 +69,8 @@ void loop() {
        );
     }
     line.flush();
+    yield();
   }
 
-  digitalWrite(RELAIS, HIGH);
-  delay(2500);
-  digitalWrite(RELAIS, LOW);
+  sonner(2500);
 }
