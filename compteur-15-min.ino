@@ -5,7 +5,7 @@ enum {
   RELAIS = 8,   // Position du relais : D8
   PUSH = 3,     // Position du bouton poussoir : D3
   DUREE = 10,   // Temps de décompte
-  PRE = 1,
+  PRE = 2,
   PB_LED = 4,   // Port B : PB4 = D12
   MAX_LED = 12, // 12 leds sur une ligne
 };
@@ -72,5 +72,5 @@ void loop() {
     yield();
   }
 
-  sonner(2500);
+  sonner(1500);
 }
